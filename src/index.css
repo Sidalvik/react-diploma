@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&subset=cyrillic-ext');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed&subset=cyrillic-ext');
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+a {
+  color: #727e86;
+}
+
+a, a:hover, a:visited, a:active {
+  text-decoration: none;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+section {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+/* Top Sales */
+.top-sales {
+  min-height: 300px;
+}
+
+/* Common Styles */
+.invisible {
+  opacity: 0;
+}
+
+
+/* Bootstrap */
+.nav-link.active {
+  color: #ff0000;
+}
+
+h2, .h2 {
+  margin-bottom: 1.5em;
+  margin-top: 2em;
+}
+
+.btn-outline-primary {
+  color: #727e86;
+  border-color: #727e86;
+}
+
+.btn-outline-primary:hover {
+  background-color: #727e86;
+  border-color: #727e86;
+}

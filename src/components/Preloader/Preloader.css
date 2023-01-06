@@ -1,0 +1,47 @@
+/* Preloader */
+.preloader {
+    margin: 10px auto;  
+    position: relative;
+    width: 30px;
+    height: 30px;
+  }
+  .preloader span {
+    border: 0;
+    margin: 0;
+    width: 40%;
+    height: 40%;
+    position: absolute;
+    border-radius: 50%;
+    animation: spin 2s ease infinite;
+  }
+  .preloader :first-child {
+    background: #19A68C;
+    animation-delay: -1.5s;
+  }
+  .preloader :nth-child(2) {
+    background: #ff748b;
+    animation-delay: -1s;
+  }
+  .preloader :nth-child(3) {
+    background: #ffb676;
+    animation-delay: -0.5s;
+  }
+  .preloader :last-child {
+    background: #727e86;
+  }
+  @keyframes spin {
+    0%,
+    100% {
+      transform: translate(0);
+    }
+    25% {
+      transform: translate(160%);
+    }
+    50% {
+      transform: translate(160%, 160%);
+    }
+    75% {
+      transform: translate(0, 160%);
+    }
+  }
+  

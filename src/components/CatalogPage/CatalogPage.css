@@ -1,0 +1,19 @@
+/* Catalog */
+.catalog {
+  min-height: 600px;
+}
+
+.catalog-item-card {
+  margin-bottom: 1em;
+}
+
+.catalog-item-size {
+  display: inline-block;
+  padding: 0 10px;
+}
+
+.catalog-item-size.selected {
+  background: #727e86;
+  border-radius: 15px;
+  color: #fff;
+}

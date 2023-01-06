@@ -1,0 +1,36 @@
+  .footer-pay {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px auto 0;
+  }
+  .footer-pay-systems {
+    width: 46px;
+    height: 28px;
+    border: 2px solid #FFFFFF;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    background-repeat: no-repeat;
+    background-image: url(/public/img/footer-sprite.png);
+  }
+  .footer-pay-systems:not(:first-child) {
+    margin-left: 5px;
+  }
+  .footer-pay-systems-paypal {
+    background-position: -2px -6px;
+  }
+  .footer-pay-systems-master-card {
+    background-position: -54px -8px;
+  }
+  .footer-pay-systems-visa {
+    background-position: -104px -8px;
+  }
+  .footer-pay-systems-yandex {
+    background-position: -154px -8px;
+  }
+  .footer-pay-systems-webmoney {
+    background-position: -2px -46px;
+  }
+  .footer-pay-systems-qiwi {
+    background-position: -52px -46px;
+  }
+  
