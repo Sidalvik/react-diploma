@@ -4,7 +4,7 @@ import './Banner.css';
 
 function Banner(props) {
   const bannerContent = {
-    src: './img/banner.jpg',
+    src: '/img/banner.jpg',
     title: 'К весне готовы!',
   }
 

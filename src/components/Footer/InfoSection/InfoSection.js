@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import FooterNavItem from './FooterNavItem/FooterNavItem';
+import {Link} from 'react-router-dom';
+import {CATALOG_PAGE as linkToCatalog, ABOUT_PAGE as linkToAbout, CONTACTS_PAGE as linkToContacts, } from '../../../config/links';
 
 function InfoSection(props) {
   return (
     <section>
         <h5>Информация</h5>
         <ul className='nav flex-column'>
-            <FooterNavItem><a href='/about.html' className='nav-link'>О магазине</a></FooterNavItem>
-            <FooterNavItem><a href='/catalog.html' className='nav-link'>Каталог</a></FooterNavItem>
-            <FooterNavItem><a href='/contacts.html' className='nav-link'>Контакты</a></FooterNavItem>
+            <FooterNavItem><Link to={linkToAbout()} className='nav-link'>О магазине</Link></FooterNavItem>
+            <FooterNavItem><Link to={linkToCatalog()} className='nav-link'>Каталог</Link></FooterNavItem>
+            <FooterNavItem><Link to={linkToContacts()} className='nav-link'>Контакты</Link></FooterNavItem>
         </ul>
     </section>
   )
