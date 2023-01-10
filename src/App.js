@@ -9,10 +9,18 @@ import ContactsPage from './components/ContactsPage/ContactsPage';
 import ProductPage from './components/ProductPage/ProductPage';
 import Page404 from './components/Page404/Page404';
 import Footer from './components/Footer/Footer';
+import React, {useEffect} from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
+import {restoreCartState} from './store/actions/actionCreatorsCart';
 import {ROOT_PAGE as root, CATALOG_PAGE as linkToCatalog, PRODUCT_PAGE as linkToProduct, ABOUT_PAGE as linkToAbout, CONTACTS_PAGE as linkToContacts, CART_PAGE as linkToCart} from './config/links';
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(restoreCartState());
+  },[dispatch])
 
   return (
     <BrowserRouter>
