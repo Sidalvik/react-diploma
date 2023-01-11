@@ -1,16 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
+import {PRODUCT_PAGE as linkToProduct} from '../../../../../config/links';
 
 function CatalogItemCard(props) {
-  const {className} = props;
-  const { id, src, name, cost } = {id: 1, src: './img/products/sandals_myer.jpg', name: 'Босоножки "MYER"', cost: '34 000 руб.'}
+  const {className, item} = props;
+  const { id, images, title, price } = item;
+
   return (
     <div className={'card ' + (className ? className : '')}>
-        <img src={src} className='card-img-top img-fluid' alt={name}/>
+        <img src={images[0]} className='card-img-top img-fluid' alt={title}/>
         <div className='card-body'>
-            <p className='card-text'>{name}</p>
-            <p className='card-text'>{cost}</p>
-            <a href={`/products/${id}.html`} className='btn btn-outline-primary'>Заказать</a>
+            <p className='card-text'>{title}</p>
+            <p className='card-text'>{price}</p>
+            <Link to={linkToProduct(id)} className='btn btn-outline-primary'>Заказать</Link>
         </div>
     </div>
   )
@@ -18,6 +21,12 @@ function CatalogItemCard(props) {
 
 CatalogItemCard.defaultProps = {
   className: 'catalog-item-card',
+  item: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    images: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    title: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+  }).isRequired
 }
 
 CatalogItemCard.propTypes = {

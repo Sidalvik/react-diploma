@@ -14,7 +14,7 @@ const store = configureStore({
         headerSearch: headerSearchReducer,
         catalogSearch: catalogSearchReducer,
         categories: categoriesReducer,
-        topsales: topsalesReducer,
+        topSales: topsalesReducer,
         catalogItems: catalogItemsReducer,
         product: productReducer,
         cart: cartReduscer,

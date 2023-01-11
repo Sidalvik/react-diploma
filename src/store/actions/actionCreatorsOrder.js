@@ -6,7 +6,7 @@ export function changeOrderField(name, value) {
     return {type: CHANGE_ORDER_FIELD, payload: {[name]: value}}   
 }
 
-export function postOrderRequest(orderBody) {
+export function postOrderRequest(...agr) {
     return {type: POST_ORDER_REQUEST, payload: {}}   
 }
 
@@ -35,7 +35,7 @@ changeOrderField.propTypes = {
 }
 
 postOrderRequest.propTypes = {
-    orderBody: PropTypes.string.isRequired,
+    arg: PropTypes.any,
 }
 
 postOrderSuccess.propTypes = {

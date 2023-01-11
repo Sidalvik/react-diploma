@@ -4,6 +4,7 @@ import Cart from './Cart/Cart';
 import OrderForm from './OrderForm/OrderForm';
 
 function CartPage(props) {
+
   return (
     <>
         <Cart/>

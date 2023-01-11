@@ -4,7 +4,6 @@ import {ACTIVATE_HEADER_SEARCH_FIELD, RESET_HEADER_SEARCH_FIELD, CHANGE_HEADER_S
 const initialState = {
     visible: false,
     value: '',
-    filter: '',
 };
 
 export default function headerSearchReducer(state = initialState, action) {
@@ -13,13 +12,9 @@ export default function headerSearchReducer(state = initialState, action) {
             return {...initialState};
         case CHANGE_HEADER_SEARCH_FIELD:
             const {value} = action.payload;
-            return {...state, value};
+            return {...state, value: value.replaceAll(/[?&]/gi, '')};
         case ACTIVATE_HEADER_SEARCH_FIELD:
-            if (!state.visible) {
-                return {...initialState, visible: true};
-            } else {
-                return {...initialState, filter: state.value};
-            }
+            return {...state, visible: true};
         default: 
             return state;
     };
@@ -29,7 +24,6 @@ headerSearchReducer.propTypes = {
     state: PropTypes.shape({
         visible: PropTypes.bool.isRequired,
         value: PropTypes.string.isRequired,
-        filter: PropTypes.string.isRequired,
     }).isRequired,
     action: PropTypes.shape({
         type: PropTypes.string.isRequired,

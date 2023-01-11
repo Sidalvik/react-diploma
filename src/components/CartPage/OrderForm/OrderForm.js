@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ModalSuccess from '../ModalSuccess/ModalSuccess';
+import ErrorMessage from '../../ErrorMessage/ErrorMessage';
 import { useDispatch, useSelector } from 'react-redux';
-import {changeOrderField, postOrderRequest} from '../../../store/actions/actionCreators';
+import {changeOrderField, postOrderFiled, postOrderRequest, postOrderSuccess, resetCart, resetErrorOrder} from '../../../store/actions/actionCreators';
 
 
 function OrderForm(props) {
@@ -34,8 +35,36 @@ function OrderForm(props) {
             address: order.address,
             },
             items
-        },['address', 'phone', 'owner', 'items', 'id', 'price', 'count'])
-        dispatch(postOrderRequest(orderBody));
+        },['address', 'phone', 'owner', 'items', 'id', 'price', 'count']);
+
+        const url = process.env.REACT_APP_ORDER + '';
+
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+            },
+            body: orderBody,
+        };
+        
+        (async (url, opt) => {
+            console.log(url)
+            try {
+                dispatch(postOrderRequest());
+                const responce = await fetch(url, opt);
+                if (responce.ok) {
+                    dispatch(postOrderSuccess());
+                    dispatch(resetCart());
+                } else {
+                    dispatch(postOrderFiled(`Error! ${responce.status}: ${responce.statusText}`));
+                    setTimeout(() => dispatch(resetErrorOrder()), 10 * 1000);
+                }
+            } catch (error) {
+                dispatch(postOrderFiled(error.message));
+                setTimeout(() => dispatch(resetErrorOrder()), 10 * 1000);
+            }
+
+        })(url, options);
     }
 
   return (
@@ -58,6 +87,7 @@ function OrderForm(props) {
                 <button type='submit' className='btn btn-outline-secondary' disabled={!checkFull}>Оформить</button>
             </form>
         </div>
+        {order.error && <ErrorMessage errorText={order.error}/>}
         {order.successOrder && <ModalSuccess/>}
     </section>
   )
