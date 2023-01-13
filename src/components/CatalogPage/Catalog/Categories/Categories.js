@@ -2,25 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Categories.css';
 import CategoriesItem from './CategoriesItem/CategoriesItem';
+import ErrorMessage from '../../../ErrorMessage/ErrorMessage';
+import Preloader from '../../../Preloader/Preloader';
+import { useSelector } from 'react-redux';
 
 function Categories(props) {
+    const categories = useSelector((state) => state.categories);
+
+    const categoriesList = categories.list.map((item) => <CategoriesItem key={item.id} item={item}/>);
+
+    if (categories.error) {
+        return <ErrorMessage errorText={categories.error}/>
+    };
+
+    if (categories.loading) {
+        return <Preloader/>
+    };
+
   return (
     <ul className='catalog-categories nav justify-content-center'>
-        <CategoriesItem>
-            <a className='nav-link active' href='/#'>Все</a>
-        </CategoriesItem>
-        <CategoriesItem>
-            <a className='nav-link' href='/#'>Женская обувь</a>
-        </CategoriesItem>
-        <CategoriesItem>
-            <a className='nav-link' href='/#'>Мужская обувь</a>
-        </CategoriesItem>
-        <CategoriesItem>
-            <a className='nav-link' href='/#'>Обувь унисекс</a>
-        </CategoriesItem>
-        <CategoriesItem>
-            <a className='nav-link' href='/#'>Детская обувь</a>
-        </CategoriesItem>
+        {categoriesList}
     </ul>
   )
 }

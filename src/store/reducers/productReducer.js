@@ -43,7 +43,7 @@ productReducer.propTypes = {
     state: PropTypes.shape({
         item: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
-        error: PropTypes.oneOf([null, PropTypes.objectOf(Error)]).isRequired,
+        error: PropTypes.oneOf([null, PropTypes.string]).isRequired,
         activeSize: PropTypes.oneOf([null, PropTypes.string]).isRequired,
         count: PropTypes.number.isRequired
     }).isRequired,

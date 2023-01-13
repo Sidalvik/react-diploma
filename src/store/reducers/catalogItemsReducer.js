@@ -3,7 +3,11 @@ import {FETCH_CATALOG_ITEMS_REQUEST, FETCH_CATALOG_ITEMS_SUCCESS, FETCH_CATALOG_
 
 const initialState = {
     list: [],
-    filter: {},
+    filter: {
+        query: '',
+        categoryId: '',
+        offset: 0,
+    },
     loading: false,
     error: null,
     isAll: false,
@@ -14,8 +18,8 @@ export default function catalogItemsReducer(state = initialState, action) {
         case FETCH_CATALOG_ITEMS_REQUEST:
             return {...state, loading: true, error: null}
         case FETCH_CATALOG_ITEMS_SUCCESS:
-            const {list, next} = action.payload;
-            const newList = next ? [...state.list, ...list] : list;
+            const {list} = action.payload;
+            const newList = state.filter.offset === 0 ? list : [...state.list, ...list]
             return {...initialState, list: newList, isAll: list.length < (+process.env.REACT_APP_LOAD_MORE_OFFSET_STEP || 6)};
         case FETCH_CATALOG_ITEMS_FILED:
             const {error} = action.payload;

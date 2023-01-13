@@ -3,36 +3,18 @@ import PropTypes from 'prop-types';
 import CatalogItemCard from './CatalogItemCard/CatalogItemCard';
 import Preloader from '../../../Preloader/Preloader';
 import { useDispatch, useSelector } from 'react-redux';
-import {fetchCatalogItemsFiled, fetchCatalogItemsRequest, fetchCatalogItemsSuccess, resetErrorCatalogItems} from '../../../../store/actions/actionCreators';
+import {fetchCatalogItemsFiled, fetchCatalogItemsRequest, fetchCatalogItemsSuccess, resetErrorCatalogItems, setFilterCatalogItems} from '../../../../store/actions/actionCreators';
 
 function Items(props) {
-const createFilterString = useCallback((filter) => {
-    const filterParams = {
-        query: process.env.REACT_APP_ITEMS_QUERY_PARAM_NAME || 'q',
-        categoryId: process.env.REACT_APP_ITEMS_CATEGORY_PARAM_NAME || 'categoryId',
-        offset: process.env.REACT_APP_ITEMS_LOAD_MORE_PARAM_NAME || 'offset',
-    }    
-    const url = Object.entries(filter)
-        .filter((item) => item[1])
-        .map((item) => item[1] ? `${filterParams[item[0]]}=${item[1]}` : '')
-        .join('&');
-    return url ? '?' + url : '';
-}, []);
 
-const search = useSelector((store) => store.catalogSearch);
-const categories = useSelector((store) => store.categories);
 const catalogItems = useSelector((store) => store.catalogItems);
 const dispatch = useDispatch();
 
-const filter = {
-    query: search.filter,
-    categoryId: categories.activeId,
-}
 
-const fetchCatalog = async (filter, next=false) => {
-    const url = process.env.REACT_APP_ITEMS + createFilterString(filter);
+const fetchCatalog = async () => {
+    // const url = process.env.REACT_APP_ITEMS + createFilterString();
 
-    dispatch(fetchCatalogItemsRequest(next));
+    // dispatch(fetchCatalogItemsRequest(next));
     // try {
     //   const responce = await fetch(url);
     //   if (responce.ok) {
@@ -53,14 +35,14 @@ const fetchCatalog = async (filter, next=false) => {
     // }
   }
 
-    useEffect(() => {
-        if (catalogItems.loading) return
-        fetchCatalog(filter, false);
-        return
-    },[catalogItems.loading, fetchCatalog])
+    // useEffect(() => {
+    //     if (catalogItems.loading) return
+    //     fetchCatalog();
+    //     return
+    // },[catalogItems.loading, fetchCatalog])
 
     const handleGetNext = () => {
-        fetchCatalog({...filter, offset: catalogItems.list.length}, true);
+        dispatch(setFilterCatalogItems({offset: catalogItems.list.length}));
     }
 
 

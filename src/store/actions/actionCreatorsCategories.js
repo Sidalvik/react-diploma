@@ -9,7 +9,7 @@ export function resetCategories(...arg) {
     return {type: RESET_CATEGORIES, payload: {}};
 }
 
-export function fetchCategories(...arg) {
+export function fetchCategoriesRequest(...arg) {
     return {type: FETCH_CATEGORIES_REQUEST, payload: {}};
 }   //  TODO GET from server
 
@@ -35,7 +35,7 @@ resetCategories.propTypes = {
     arg: PropTypes.any,
 }
 
-fetchCategories.propTypes = {
+fetchCategoriesRequest.propTypes = {
     arg: PropTypes.any,
 }
 

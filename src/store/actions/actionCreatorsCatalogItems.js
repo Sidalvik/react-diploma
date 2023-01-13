@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import {FETCH_CATALOG_ITEMS_REQUEST, FETCH_CATALOG_ITEMS_SUCCESS, FETCH_CATALOG_ITEMS_FILED, SET_FILTER_CATALOG_ITEMS, RESET_FILTER_CATALOG_ITEMS, RESET_ERROR_CATALOG_ITEMS, RESET_CATALOG_ITEMS} from '../actions/actionTypes';
 
 
-export function fetchCatalogItemsRequest(next = false, ...arg) {
-    return {type: FETCH_CATALOG_ITEMS_REQUEST, payload: {next}}
+export function fetchCatalogItemsRequest(...arg) {
+    return {type: FETCH_CATALOG_ITEMS_REQUEST, payload: {}}
 }
 
-export function fetchCatalogItemsSuccess(list, next=false) {
-    return {type: FETCH_CATALOG_ITEMS_SUCCESS, payload: {list, next}}
+export function fetchCatalogItemsSuccess(list) {
+    return {type: FETCH_CATALOG_ITEMS_SUCCESS, payload: {list}}
 }
 
 export function fetchCatalogItemsFiled(error) {
@@ -34,7 +34,6 @@ export function resetCatalogItems(...arg) {
 //  PropTypes
 
 fetchCatalogItemsRequest.propTypes = {
-    next: PropTypes.bool,
     arg: PropTypes.any,
 }
 

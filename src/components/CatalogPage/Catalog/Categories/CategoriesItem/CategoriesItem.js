@@ -1,16 +1,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+// import {NavLink} from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {CATALOG_PAGE as linkToCatalog} from '../../../../../config/links';
+import {changeActiveCategories, setFilterCatalogItems} from '../../../../../store/actions/actionCreators';
 
 function CategoriesItem(props) {
+  const {item} = props;
+  const categories = useSelector((state) => state.categories);
+  const dispath = useDispatch();
+
+  const handleCheck = (event) => {
+    event.preventDefault();
+    if (item.id === categories.activeId) return;
+
+    dispath(changeActiveCategories(item.id));
+    dispath(setFilterCatalogItems({categoryId: item.id}));
+  }
+
   return (
     <li className='nav-item'>
-        {props.children}
+        <a className={`nav-link${(item.id === categories.activeId ? ' active' : '')}`} href={`${linkToCatalog()}/?${process.env.REACT_APP_ITEMS_CATEGORY_PARAM_NAME + '='+ item.id}`} onClick={handleCheck}>{item.title}</a>
+        {/* <NavLink to={`${linkToCatalog()}/?${process.env.REACT_APP_ITEMS_CATEGORY_PARAM_NAME + '='+ item.id}`} className={`nav-link${(item.id === categories.activeId ? ' active' : '')}`} onClick={handleCheck}>{item.title}</NavLink> */}
     </li>
   )
 }
 
 CategoriesItem.propTypes = {
-    props: PropTypes.any,
+  item: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+  }).isRequired,
 }
 
 export default CategoriesItem

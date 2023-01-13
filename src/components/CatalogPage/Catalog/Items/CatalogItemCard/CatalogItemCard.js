@@ -8,7 +8,7 @@ function CatalogItemCard(props) {
   const { id, images, title, price } = item;
 
   return (
-    <div className={'card ' + (className ? className : '')}>
+    <div className={`card ${(className ? className : '')}`}>
         <img src={images[0]} className='card-img-top img-fluid' alt={title}/>
         <div className='card-body'>
             <p className='card-text'>{title}</p>

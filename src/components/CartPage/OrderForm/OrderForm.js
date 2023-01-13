@@ -37,7 +37,7 @@ function OrderForm(props) {
             items
         },['address', 'phone', 'owner', 'items', 'id', 'price', 'count']);
 
-        const url = process.env.REACT_APP_ORDER + '';
+        const url = process.env.REACT_APP_ORDER;
 
         const options = {
             method: 'POST',
@@ -48,7 +48,6 @@ function OrderForm(props) {
         };
         
         (async (url, opt) => {
-            console.log(url)
             try {
                 dispatch(postOrderRequest());
                 const responce = await fetch(url, opt);
