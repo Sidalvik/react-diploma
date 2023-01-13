@@ -21,8 +21,8 @@ function SearchForm(props) {
       return
     } 
     if (headerSearch.visible && headerSearch.value) {
+      dispatch(setFilterCatalogItems({query: headerSearch.value, offset: 0}));
       dispatch(changeCatalogSearch(headerSearch.value));
-      dispatch(setFilterCatalogItems({query: headerSearch.value}));
     }
     
     dispatch(resetHeaderSearch());

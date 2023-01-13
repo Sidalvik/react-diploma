@@ -25,8 +25,37 @@ export function resetErrorCategories(...arg) {
     return {type: RESET_ERROR_CATEGORIES, payload: {}};
 }
 
+    //  Acync functions
+export async function fetchCategories(dispatch) {
+    const showErrorMesage = (errorMessage) =>{
+        dispatch(fetchCategoriesFiled(errorMessage));
+        setTimeout(() => dispatch(resetErrorCategories()), 10 * 1000);
+    }
 
-//  PropTypes
+    const abort = new AbortController();
+
+    const url = `${process.env.REACT_APP_CATEGORIES}`;
+    dispatch(fetchCategoriesRequest());
+
+    try {
+      const responce = await fetch(url, {signal: abort.signal});
+      if (responce.ok) {
+        try {
+          const list = await responce.json();
+          dispatch(fetchCategoriesSuccess(list));
+        } catch (error) {
+            showErrorMesage(error.message);
+        }
+      } else {
+        showErrorMesage(`Error ${responce.status}: ${responce.statusText}`);
+      }
+    } catch (error) {
+        showErrorMesage(error.message);
+    }
+}
+
+
+    //  PropTypes
 changeActiveCategories.propTypes = {
     id: PropTypes.number.isRequired,
 }
@@ -44,9 +73,13 @@ fetchCategoriesSuccess.propTypes = {
 }
 
 fetchCategoriesFiled.propTypes = {
-    error: PropTypes.objectOf(Error).isRequired,
+    error: PropTypes.string.isRequired,
 }
 
 resetErrorCategories.propTypes = {
     arg: PropTypes.any,
+}
+
+fetchCategories.propTypes = {
+    dispatch: PropTypes.func.isRequired,
 }

@@ -18,7 +18,7 @@ function CatalogSearchForm(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    dispatch(setFilterCatalogItems({query: catalogSearch.value}))
+    dispatch(setFilterCatalogItems({query: catalogSearch.value, offset: 0}))
   }
 
   return (

@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import {FETCH_TOPSALES_REQUEST,FETCH_TOPSALES_SUCCESS, FETCH_TOPSALES_FILED, RESET_ERROR_TOPSALES, RESET_TOPSALES} from '../actions/actionTypes';
 
-export function fetchTopsalesRequest(...arg) {
-    return {type: FETCH_TOPSALES_REQUEST, payload: {}};
+export function fetchTopsalesRequest(abort, ...arg) {
+    return {type: FETCH_TOPSALES_REQUEST, payload: {abort}};
 }
 
 export function fetchTopsalesSuccess(list) {
@@ -22,7 +22,37 @@ export function resetTopsales(...arg) {
 }
 
 
-//  PropTypes
+    // async functions
+export async function fetchTopsales(dispatch, ...arg) {    
+  const showErrorMessage = (errorMesage) => {
+    dispatch(fetchTopsalesFiled(errorMesage));
+    setTimeout(() => dispatch(resetErrorTopsales()), 10 * 1000);
+  }
+    const abort = new AbortController();
+
+    const url = `${process.env.REACT_APP_TOP_SALES}`;
+
+    dispatch(fetchTopsalesRequest());
+    try {
+      const responce = await fetch(url, {signal: abort.signal});
+      if (responce.ok) {
+        try {
+          const list = await responce.json();
+          dispatch(fetchTopsalesSuccess(list));
+        } catch (error) {
+          showErrorMessage(error.message);
+        }
+      } else {
+        showErrorMessage(`Error ${responce.status}: ${responce.statusText}`);
+      }
+    } catch (error) {
+      showErrorMessage(error.message);
+    }
+    };
+
+
+
+    //  PropTypes
 fetchTopsalesRequest.propTypes = {
     arg: PropTypes.any,
 }
@@ -32,7 +62,7 @@ fetchTopsalesSuccess.propTypes = {
 }
 
 fetchTopsalesFiled.propTypes = {
-    error: PropTypes.objectOf(Error).isRequired,
+    error: PropTypes.string.isRequired,
 }
 
 resetErrorTopsales.propTypes = {
@@ -40,5 +70,9 @@ resetErrorTopsales.propTypes = {
 }
 
 resetTopsales.propTypes = {
+    arg: PropTypes.any,
+}
+
+fetchTopsales.propTypes = {
     arg: PropTypes.any,
 }

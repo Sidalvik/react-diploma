@@ -29,6 +29,37 @@ export function changeProductCount(step) {
     return {type: CHANGE_PRODUCT_COUNT, payload: {step}}
 }
 
+    //  Acync functions
+export async function fetchProduct(dispatch, id) {
+    const showErrorMesage = (errorMessage) =>{
+        dispatch(fetchProductFiled(errorMessage));
+        // setTimeout(() => dispatch(resetErrorProduct()), 10 * 1000);
+    }
+
+    const abort = new AbortController();
+
+    const url = `${process.env.REACT_APP_ITEMS}/${id}`;
+    dispatch(fetchProductRequest());
+
+    try {
+      const responce = await fetch(url, {signal: abort.signal});
+      if (responce.ok) {
+        try {
+          const list = await responce.json();
+          dispatch(fetchProductSuccess(list));
+        } catch (error) {
+            showErrorMesage(error.message);
+        }
+      } else {
+        console.log(responce)
+        console.log(`Error ${responce.status}: ${responce.statusText}`)
+        showErrorMesage(`Error ${responce.status}: ${responce.statusText}`);
+      }
+    } catch (error) {
+        showErrorMesage(error.message);
+    }
+}
+
 
     //  PropTypes
 fetchProductRequest.propTypes = {
@@ -40,7 +71,7 @@ fetchProductSuccess.propTypes = {
 }
 
 fetchProductFiled.propTypes = {
-    error: PropTypes.objectOf(Error).isRequired,
+    error: PropTypes.string.isRequired,
 }
 
 resetErrorProduct.propTypes = {
@@ -57,4 +88,9 @@ resetActiveSizeProduct.propTypes = {
 
 changeProductCount.propTypes = {
     step: PropTypes.number.isRequired,
+}
+
+fetchProduct.propTypes ={
+    dispatch: PropTypes.func.isRequired,
+    id: PropTypes.number.isRequired,
 }

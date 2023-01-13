@@ -31,6 +31,49 @@ export function resetCatalogItems(...arg) {
 }
 
 
+    // async functions
+export async function fetchCatalogItems(dispatch, filter = {}) {
+    const showErrorMesage = (errorMessage) =>{
+        dispatch(fetchCatalogItemsFiled(errorMessage));
+        setTimeout(() => dispatch(resetErrorCatalogItems()), 10 * 1000);
+    }
+
+    const abort = new AbortController();
+
+    const url = `${process.env.REACT_APP_ITEMS}${createFilterString (filter)}`;
+    dispatch(fetchCatalogItemsRequest());
+
+    try {
+      const responce = await fetch(url, {signal: abort.signal});
+      if (responce.ok) {
+        try {
+          const list = await responce.json();
+          dispatch(fetchCatalogItemsSuccess(list));
+        } catch (error) {
+            showErrorMesage(error.message);
+        }
+      } else {
+        showErrorMesage(`Error ${responce.status}: ${responce.statusText}`);
+      }
+    } catch (error) {
+        showErrorMesage(error.message);
+    }
+}
+
+function createFilterString(filter) {
+    const filterParams = {
+        query: process.env.REACT_APP_ITEMS_QUERY_PARAM_NAME || 'q',
+        categoryId: process.env.REACT_APP_ITEMS_CATEGORY_PARAM_NAME || 'categoryId',
+        offset: process.env.REACT_APP_ITEMS_LOAD_MORE_PARAM_NAME || 'offset',
+    }    
+    const url = Object.entries(filter)
+        .filter((item) => item[1])
+        .map((item) => item[1] ? `${filterParams[item[0]]}=${item[1]}` : '')
+        .join('&');
+    return url ? '?' + url : '';
+}
+
+
 //  PropTypes
 
 fetchCatalogItemsRequest.propTypes = {
@@ -39,11 +82,10 @@ fetchCatalogItemsRequest.propTypes = {
 
 fetchCatalogItemsSuccess.propTypes = {
     list: PropTypes.arrayOf(PropTypes.object).isRequired,
-    next: PropTypes.bool,
 }
 
 fetchCatalogItemsFiled.propTypes = {
-    error: PropTypes.objectOf(Error).isRequired,
+    error: PropTypes.string.isRequired,
 }
 
 setFilterCatalogItems.propTypes = {
@@ -64,4 +106,21 @@ resetErrorCatalogItems.propTypes = {
 
 resetCatalogItems.propTypes = {
     arg: PropTypes.any,
+}
+
+createFilterString.propTypes = {
+    filter: PropTypes.shape({
+        query: PropTypes.string,
+        categoryId: PropTypes.string,
+        offset: PropTypes.string,
+    }).isRequired,
+}
+
+fetchCatalogItems.propTypes = {
+    dispatch: PropTypes.func.isRequired,
+    filter: PropTypes.shape({
+        query: PropTypes.string,
+        categoryId: PropTypes.string,
+        offset: PropTypes.string,
+    }),
 }

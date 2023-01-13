@@ -19,8 +19,13 @@ export default function catalogItemsReducer(state = initialState, action) {
             return {...state, loading: true, error: null}
         case FETCH_CATALOG_ITEMS_SUCCESS:
             const {list} = action.payload;
-            const newList = state.filter.offset === 0 ? list : [...state.list, ...list]
-            return {...initialState, list: newList, isAll: list.length < (+process.env.REACT_APP_LOAD_MORE_OFFSET_STEP || 6)};
+            const newList = state.filter.offset === 0 ? list : [...state.list, ...list];
+            return {
+                ...state,
+                loading:false,
+                error: null,
+                list: newList,
+                isAll: list.length < (+process.env.REACT_APP_LOAD_MORE_OFFSET_STEP || 6)};
         case FETCH_CATALOG_ITEMS_FILED:
             const {error} = action.payload;
             return {...state, loading: false, error};

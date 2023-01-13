@@ -15,7 +15,7 @@ function CategoriesItem(props) {
     if (item.id === categories.activeId) return;
 
     dispath(changeActiveCategories(item.id));
-    dispath(setFilterCatalogItems({categoryId: item.id}));
+    dispath(setFilterCatalogItems({categoryId: item.id, offset: 0}));
   }
 
   return (

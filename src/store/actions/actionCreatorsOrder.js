@@ -43,7 +43,7 @@ postOrderSuccess.propTypes = {
 }
 
 postOrderFiled.propTypes = {
-    error: PropTypes.objectOf(Error).isRequired,
+    error: PropTypes.string.isRequired,
 }
 
 resetErrorOrder.propTypes = {

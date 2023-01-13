@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './Categories.css';
 import CategoriesItem from './CategoriesItem/CategoriesItem';
 import ErrorMessage from '../../../ErrorMessage/ErrorMessage';
 import Preloader from '../../../Preloader/Preloader';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCategories } from '../../../../store/actions/actionCreatorsCategories';
 
 function Categories(props) {
     const categories = useSelector((state) => state.categories);
+    const dispatch = useDispatch();
+
+    useEffect((() => {
+        fetchCategories(dispatch);
+    }), [dispatch])
 
     const categoriesList = categories.list.map((item) => <CategoriesItem key={item.id} item={item}/>);
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import SizeItem from './SizeItem/SizeItem';
 import Counter from './Counter/Counter';
@@ -6,11 +6,13 @@ import Preloader from '../Preloader/Preloader';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import Page404 from '../Page404/Page404';
 import {useSelector, useDispatch} from 'react-redux';
-import {addCartItem} from '../../store/actions/actionCreators';
+import {addCartItem, fetchProduct} from '../../store/actions/actionCreators';
+import { useParams } from 'react-router-dom';
 
 function ProductPage(props) {
     const dispatch = useDispatch();
     const product = useSelector((state) => state.product);
+    const {id} = useParams();
 
     const handleAddCartItem = () => {
         const cartItem = {
@@ -22,6 +24,10 @@ function ProductPage(props) {
         dispatch(addCartItem(cartItem));
         console.log('click to "add to cart"');
     }
+
+    useEffect(() => {
+        fetchProduct(dispatch, id)
+    },[dispatch, id])
 
     const {item} = product;
     const avalibleSize = item?.sizes?.filter((size) => size.avalible).map((size) => size.size);
@@ -38,7 +44,7 @@ function ProductPage(props) {
     if (product?.error) {
         return (
             <section className='catalog-item'>
-                <ErrorMessage errorText={product?.error?.message}/>
+                <ErrorMessage errorText={product.error}/>
             </section>            
         )
     }
