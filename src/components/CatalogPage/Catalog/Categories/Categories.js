@@ -11,7 +11,9 @@ function Categories(props) {
     const dispatch = useDispatch();
     
     useEffect((() => {
-        fetchCategories(dispatch);
+        const controller = new AbortController();
+        fetchCategories(dispatch, controller);
+        return () => controller.abort();
     }), [dispatch]);
 
     const categories = useSelector((state) => state.categories);

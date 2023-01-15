@@ -14,7 +14,9 @@ function ProductPage(props) {
     const {id} = useParams();
     
     useEffect(() => {
-        fetchProduct(dispatch, id)
+        const controller = new AbortController();
+        fetchProduct(dispatch, controller, id);
+        return (() => controller.abort());
     },[dispatch, id])
     
     const product = useSelector((state) => state.product);

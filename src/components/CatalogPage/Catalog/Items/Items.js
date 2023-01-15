@@ -11,7 +11,9 @@ function Items(props) {
     const dispatch = useDispatch();
   
     useEffect(() => {
-      fetchCatalogItems(dispatch, catalogItems.filter)
+      const controller = new AbortController();
+      fetchCatalogItems(dispatch, controller, catalogItems.filter);
+      return (() => controller.abort());
     }, [dispatch, catalogItems.filter])
   
     const handleGetNext = () => {
@@ -19,16 +21,6 @@ function Items(props) {
     }
   
     const items = catalogItems.list.map((item) => <div className='col-4' key={item.id}><CatalogItemCard className={'catalog-item-card'} item={item}/></div>);
-    if (items.length === 0) {
-      return (
-        <div className='row'>
-          <div className="col-12">
-            {!catalogItems.loading && catalogItems.error && <ErrorMessage errorText={catalogItems.error?.message}/>}
-            {catalogItems.loading && <Preloader/>}
-          </div>
-        </div>
-      )
-    }
     
   return (
     <>
@@ -37,6 +29,7 @@ function Items(props) {
         </div>
         <div className='row'>
           <div className="col-12">
+            {!catalogItems.loading && catalogItems.error && <ErrorMessage errorText={catalogItems.error?.message}/>}
             {
               !(catalogItems.isAll || catalogItems.loading || catalogItems.error) && 
               <div className='text-center'>

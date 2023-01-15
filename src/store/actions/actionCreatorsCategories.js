@@ -23,31 +23,31 @@ export function resetErrorCategories(...arg) {
 }
 
     //  Acync functions
-export async function fetchCategories(dispatch) {
-    const showErrorMesage = (errorMessage) =>{
-        dispatch(fetchCategoriesFiled(errorMessage));
+export async function fetchCategories(dispatch, controller) {
+    const showErrorMesage = (error) =>{
+        if (error.name === 'AbortError') return;
+
+        dispatch(fetchCategoriesFiled(error));
         setTimeout(() => dispatch(resetErrorCategories()),  (+process.env.REACT_APP_ERROR_RESET_TIMEOUT || 10) * 1000);
     }
-
-    const abort = new AbortController();
 
     const url = `${process.env.REACT_APP_CATEGORIES}`;
     dispatch(fetchCategoriesRequest());
 
     try {
-      const responce = await fetch(url, {signal: abort.signal});
+      const responce = await fetch(url, {signal: controller.signal});
       if (responce.ok) {
         try {
           const list = await responce.json();
           dispatch(fetchCategoriesSuccess(list));
         } catch (error) {
-            showErrorMesage(error.message);
+            showErrorMesage({name: error.name, message: error.message});
         }
       } else {
         showErrorMesage(`Error ${responce.status}: ${responce.statusText}`);
       }
     } catch (error) {
-        showErrorMesage(error.message);
+        showErrorMesage({name: error.name, message: error.message});
     }
 }
 

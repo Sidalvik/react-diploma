@@ -30,31 +30,31 @@ export function changeProductCount(step) {
 }
 
     //  Acync functions
-export async function fetchProduct(dispatch, id) {
-    const showErrorMesage = (errorMessage) =>{
-        dispatch(fetchProductFiled(errorMessage));
+export async function fetchProduct(dispatch, controller, id) {
+    const showErrorMesage = (error) => {
+        if (error.name === 'AbortError') return;
+
+        dispatch(fetchProductFiled(error));
         // setTimeout(() => dispatch(resetErrorProduct()), (+process.env.REACT_APP_ERROR_RESET_TIMEOUT || 10) * 1000);
     }
-
-    const abort = new AbortController();
 
     const url = `${process.env.REACT_APP_ITEMS}/${id}`;
     dispatch(fetchProductRequest());
 
     try {
-      const responce = await fetch(url, {signal: abort.signal});
+      const responce = await fetch(url, {signal: controller.signal});
       if (responce.ok) {
         try {
           const list = await responce.json();
           dispatch(fetchProductSuccess(list));
         } catch (error) {
-            showErrorMesage({message: error.message});
+            showErrorMesage({name: error.name, message: error.message});
         }
       } else {
         showErrorMesage({status: responce.status, message: `Error ${responce.status}: ${responce.statusText}`});
       }
     } catch (error) {
-        showErrorMesage({message: error.message});
+        showErrorMesage({name: error.name, message: error.message});
     }
 }
 

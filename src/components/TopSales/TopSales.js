@@ -12,7 +12,9 @@ function TopSales(props) {
   const topSales = useSelector((state) => state.topSales);
   
   useEffect(() => {
-    fetchTopsales(dispatch);
+    const controller = new AbortController();
+    fetchTopsales(dispatch, controller);
+    return (() => controller.abort());
   }, [dispatch]);
 
   if (!topSales.loading && !topSales.error && topSales.list.length === 0) {

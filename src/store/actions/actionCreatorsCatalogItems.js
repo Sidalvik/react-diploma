@@ -32,31 +32,31 @@ export function resetCatalogItems(...arg) {
 
 
     // async functions
-export async function fetchCatalogItems(dispatch, filter = {}) {
-    const showErrorMesage = (error) =>{
+export async function fetchCatalogItems(dispatch, controller, filter = {}) {
+    const showErrorMesage = (error) => {
+        if (error.name === 'AbortError') return;
+        
         dispatch(fetchCatalogItemsFiled(error));
         setTimeout(() => dispatch(resetErrorCatalogItems()), (+process.env.REACT_APP_ERROR_RESET_TIMEOUT || 10) * 1000);
     }
-
-    const abort = new AbortController();
 
     const url = `${process.env.REACT_APP_ITEMS}${createFilterString (filter)}`;
     dispatch(fetchCatalogItemsRequest());
 
     try {
-      const responce = await fetch(url, {signal: abort.signal});
+      const responce = await fetch(url, {signal: controller.signal});
       if (responce.ok) {
         try {
           const list = await responce.json();
           dispatch(fetchCatalogItemsSuccess(list));
         } catch (error) {
-            showErrorMesage({message: error.message});
+            showErrorMesage({name: error.name, message: error.message});
         }
       } else {
         showErrorMesage({status: responce.status, message: `Error ${responce.status}: ${responce.statusText}`});
       }
     } catch (error) {
-        showErrorMesage({message: error.message});
+        showErrorMesage({name: error.name, message: error.message});
     }
 }
 

@@ -23,30 +23,31 @@ export function resetTopsales(...arg) {
 
 
     // async functions
-export async function fetchTopsales(dispatch, ...arg) {    
+export async function fetchTopsales(dispatch, controller, ...arg) {    
   const showErrorMessage = (error) => {
-    dispatch(fetchTopsalesFiled(error));
-    setTimeout(() => dispatch(resetErrorTopsales()), (+process.env.REACT_APP_ERROR_RESET_TIMEOUT || 10) * 1000);
-  }
-    const abort = new AbortController();
+    if (error.name === 'AbortError') return;
+
+      dispatch(fetchTopsalesFiled(error));
+      setTimeout(() => dispatch(resetErrorTopsales()), (+process.env.REACT_APP_ERROR_RESET_TIMEOUT || 10) * 1000);
+    }
 
     const url = `${process.env.REACT_APP_TOP_SALES}`;
 
     dispatch(fetchTopsalesRequest());
     try {
-      const responce = await fetch(url, {signal: abort.signal});
+      const responce = await fetch(url, {signal: controller.signal});
       if (responce.ok) {
         try {
           const list = await responce.json();
           dispatch(fetchTopsalesSuccess(list));
         } catch (error) {
-          showErrorMessage({message: error.message});
+          showErrorMessage({name: error.name, message: error.message});
         }
       } else {
         showErrorMessage({status: responce.status, message:`Error ${responce.status}: ${responce.statusText}`});
       }
     } catch (error) {
-      showErrorMessage({message: error.message});
+      showErrorMessage({name: error.name, message: error.message});
     }
     };
 
