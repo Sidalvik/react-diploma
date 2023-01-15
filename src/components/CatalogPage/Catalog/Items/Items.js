@@ -4,6 +4,7 @@ import CatalogItemCard from './CatalogItemCard/CatalogItemCard';
 import Preloader from '../../../Preloader/Preloader';
 import { useDispatch, useSelector } from 'react-redux';
 import {fetchCatalogItems, setFilterCatalogItems} from '../../../../store/actions/actionCreators';
+import ErrorMessage from '../../../ErrorMessage/ErrorMessage';
 
 function Items(props) {
     const catalogItems = useSelector((store) => store.catalogItems);
@@ -11,22 +12,40 @@ function Items(props) {
   
     useEffect(() => {
       fetchCatalogItems(dispatch, catalogItems.filter)
-    },[catalogItems.filter, dispatch])
+    }, [dispatch, catalogItems.filter])
   
     const handleGetNext = () => {
         dispatch(setFilterCatalogItems({offset: catalogItems.list.length}));
     }
   
     const items = catalogItems.list.map((item) => <div className='col-4' key={item.id}><CatalogItemCard className={'catalog-item-card'} item={item}/></div>);
+    if (items.length === 0) {
+      return (
+        <div className='row'>
+          <div className="col-12">
+            {!catalogItems.loading && catalogItems.error && <ErrorMessage errorText={catalogItems.error?.message}/>}
+            {catalogItems.loading && <Preloader/>}
+          </div>
+        </div>
+      )
+    }
+    
   return (
     <>
         <div className='row'>
             {items}
         </div>
-        {(!catalogItems.isAll || catalogItems.loading) && <div className='text-center'>
-            <button className='btn btn-outline-primary' onClick={handleGetNext}>Загрузить ещё</button>
-        </div>}
-        {catalogItems.loading && <Preloader/>}
+        <div className='row'>
+          <div className="col-12">
+            {
+              !(catalogItems.isAll || catalogItems.loading || catalogItems.error) && 
+              <div className='text-center'>
+                  <button className='btn btn-outline-primary' onClick={handleGetNext} >Загрузить ещё</button>
+              </div>
+            }
+            {catalogItems.loading && <Preloader/>}
+          </div>
+        </div>
     </>
   )
 }

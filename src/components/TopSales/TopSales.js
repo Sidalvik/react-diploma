@@ -29,7 +29,7 @@ function TopSales(props) {
             {items}
         </div>}
         {topSales.loading && <Preloader/>}
-        {topSales.error && <ErrorMessage errorText={topSales.error}/>}
+        {topSales.error && <ErrorMessage errorText={topSales.error?.message}/>}
     </section>
   )
 }

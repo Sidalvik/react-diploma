@@ -33,9 +33,9 @@ export function resetCatalogItems(...arg) {
 
     // async functions
 export async function fetchCatalogItems(dispatch, filter = {}) {
-    const showErrorMesage = (errorMessage) =>{
-        dispatch(fetchCatalogItemsFiled(errorMessage));
-        setTimeout(() => dispatch(resetErrorCatalogItems()), 10 * 1000);
+    const showErrorMesage = (error) =>{
+        dispatch(fetchCatalogItemsFiled(error));
+        setTimeout(() => dispatch(resetErrorCatalogItems()), (+process.env.REACT_APP_ERROR_RESET_TIMEOUT || 10) * 1000);
     }
 
     const abort = new AbortController();
@@ -50,13 +50,13 @@ export async function fetchCatalogItems(dispatch, filter = {}) {
           const list = await responce.json();
           dispatch(fetchCatalogItemsSuccess(list));
         } catch (error) {
-            showErrorMesage(error.message);
+            showErrorMesage({message: error.message});
         }
       } else {
-        showErrorMesage(`Error ${responce.status}: ${responce.statusText}`);
+        showErrorMesage({status: responce.status, message: `Error ${responce.status}: ${responce.statusText}`});
       }
     } catch (error) {
-        showErrorMesage(error.message);
+        showErrorMesage({message: error.message});
     }
 }
 
@@ -85,7 +85,10 @@ fetchCatalogItemsSuccess.propTypes = {
 }
 
 fetchCatalogItemsFiled.propTypes = {
-    error: PropTypes.string.isRequired,
+    error: PropTypes.shape({
+        status: PropTypes.number,
+        message: PropTypes.string.isRequired,
+    }).isRequired,
 }
 
 setFilterCatalogItems.propTypes = {

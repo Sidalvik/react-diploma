@@ -24,9 +24,9 @@ export function resetTopsales(...arg) {
 
     // async functions
 export async function fetchTopsales(dispatch, ...arg) {    
-  const showErrorMessage = (errorMesage) => {
-    dispatch(fetchTopsalesFiled(errorMesage));
-    setTimeout(() => dispatch(resetErrorTopsales()), 10 * 1000);
+  const showErrorMessage = (error) => {
+    dispatch(fetchTopsalesFiled(error));
+    setTimeout(() => dispatch(resetErrorTopsales()), (+process.env.REACT_APP_ERROR_RESET_TIMEOUT || 10) * 1000);
   }
     const abort = new AbortController();
 
@@ -40,13 +40,13 @@ export async function fetchTopsales(dispatch, ...arg) {
           const list = await responce.json();
           dispatch(fetchTopsalesSuccess(list));
         } catch (error) {
-          showErrorMessage(error.message);
+          showErrorMessage({message: error.message});
         }
       } else {
-        showErrorMessage(`Error ${responce.status}: ${responce.statusText}`);
+        showErrorMessage({status: responce.status, message:`Error ${responce.status}: ${responce.statusText}`});
       }
     } catch (error) {
-      showErrorMessage(error.message);
+      showErrorMessage({message: error.message});
     }
     };
 
@@ -62,7 +62,10 @@ fetchTopsalesSuccess.propTypes = {
 }
 
 fetchTopsalesFiled.propTypes = {
-    error: PropTypes.string.isRequired,
+  error: PropTypes.shape({
+    status: PropTypes.number,
+    message: PropTypes.string.isRequired,
+}).isRequired,
 }
 
 resetErrorTopsales.propTypes = {

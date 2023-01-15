@@ -5,7 +5,7 @@ const initialState = {
     list: [],
     filter: {
         query: '',
-        categoryId: '',
+        categoryId: 0,
         offset: 0,
     },
     loading: false,
@@ -28,7 +28,7 @@ export default function catalogItemsReducer(state = initialState, action) {
                 isAll: list.length < (+process.env.REACT_APP_LOAD_MORE_OFFSET_STEP || 6)};
         case FETCH_CATALOG_ITEMS_FILED:
             const {error} = action.payload;
-            return {...state, loading: false, error};
+            return {...state, loading: false, error: {...error}};
         case SET_FILTER_CATALOG_ITEMS:
             const {filter} = action.payload;
             return {...state, filter: {...state.filter, ...filter}};
@@ -48,7 +48,13 @@ catalogItemsReducer.propTypes = {
     state: PropTypes.shape({
         list: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
         loading: PropTypes.bool.isRequired,
-        error: PropTypes.oneOf([null, PropTypes.string]).isRequired,
+        error: PropTypes.oneOf([
+            null,
+            PropTypes.shape({
+                status: PropTypes.number,
+                message: PropTypes.string.isRequired,
+            }),
+        ]).isRequired,
     }).isRequired,
     action: PropTypes.shape({
         type: PropTypes.string.isRequired,

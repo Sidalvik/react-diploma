@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ModalSuccess from '../ModalSuccess/ModalSuccess';
 import ErrorMessage from '../../ErrorMessage/ErrorMessage';
 import { useDispatch, useSelector } from 'react-redux';
-import {changeOrderField, postOrderFiled, postOrderRequest, postOrderSuccess, resetCart, resetErrorOrder} from '../../../store/actions/actionCreators';
+import {changeOrderField, postOrder} from '../../../store/actions/actionCreators';
 
 
 function OrderForm(props) {
@@ -37,33 +37,7 @@ function OrderForm(props) {
             items
         },['address', 'phone', 'owner', 'items', 'id', 'price', 'count']);
 
-        const url = process.env.REACT_APP_ORDER;
-
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8',
-            },
-            body: orderBody,
-        };
-        
-        (async (url, opt) => {
-            try {
-                dispatch(postOrderRequest());
-                const responce = await fetch(url, opt);
-                if (responce.ok) {
-                    dispatch(postOrderSuccess());
-                    dispatch(resetCart());
-                } else {
-                    dispatch(postOrderFiled(`Error! ${responce.status}: ${responce.statusText}`));
-                    setTimeout(() => dispatch(resetErrorOrder()), 10 * 1000);
-                }
-            } catch (error) {
-                dispatch(postOrderFiled(error.message));
-                setTimeout(() => dispatch(resetErrorOrder()), 10 * 1000);
-            }
-
-        })(url, options);
+        postOrder(dispatch, orderBody);
     }
 
   return (
@@ -83,10 +57,10 @@ function OrderForm(props) {
                     <input type='checkbox' className='form-check-input' id='agreement' name='agree' checked={order['agree']} onChange={handleChange}/>
                     <label className='form-check-label' htmlFor='agreement'>Согласен с правилами доставки</label>
                 </div>
-                <button type='submit' className='btn btn-outline-secondary' disabled={!checkFull}>Оформить</button>
+                <button type='submit' className='btn btn-outline-secondary' disabled={!checkFull || order.loading}>Оформить</button>
             </form>
         </div>
-        {order.error && <ErrorMessage errorText={order.error}/>}
+        {order.error && <ErrorMessage errorText={order.error?.message}/>}
         {order.successOrder && <ModalSuccess/>}
     </section>
   )

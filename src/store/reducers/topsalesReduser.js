@@ -30,7 +30,13 @@ topsalesReducer.propTypes = {
     state: PropTypes.shape({
         list: PropTypes.array.isRequired,
         loading: PropTypes.bool.isRequired,
-        error: PropTypes.oneOf([null, PropTypes.string]).isRequired,
+        error: PropTypes.oneOf([
+            null,
+            PropTypes.shape({
+                status: PropTypes.number,
+                message: PropTypes.string.isRequired,
+            }),
+        ]).isRequired,
     }).isRequired,
     action: PropTypes.shape({
         type: PropTypes.string.isRequired,

@@ -11,9 +11,13 @@ import { useParams } from 'react-router-dom';
 
 function ProductPage(props) {
     const dispatch = useDispatch();
-    const product = useSelector((state) => state.product);
     const {id} = useParams();
-
+    
+    useEffect(() => {
+        fetchProduct(dispatch, id)
+    },[dispatch, id])
+    
+    const product = useSelector((state) => state.product);
     const handleAddCartItem = () => {
         const cartItem = {
             ...product.item,
@@ -22,32 +26,31 @@ function ProductPage(props) {
         }
 
         dispatch(addCartItem(cartItem));
-        console.log('click to "add to cart"');
     }
 
-    useEffect(() => {
-        fetchProduct(dispatch, id)
-    },[dispatch, id])
-
     const {item} = product;
-    const avalibleSize = item?.sizes?.filter((size) => size.avalible).map((size) => size.size);
-    const sizesList = avalibleSize.map((size) => <SizeItem key={size} size={size} />);
+    
+    if (product?.loading) {
+        return <section className='catalog-item'><Preloader/></section>              
+    }
+    
+    if (product?.error) {
+        return (
+            <section className='catalog-item'>
+                {product.error?.status === 404 ? <Page404/> :
+                <ErrorMessage errorText={product.error?.message}/>}
+            </section>            
+        )
+    }
 
     if (!product?.item?.id) {
         return <Page404/>
     }
 
-    if (product?.loading) {
-        return <section className='catalog-item'><Preloader/></section>              
-    }
+    const avalibleSize = item?.sizes?.filter((size) => size.avalible).map((size) => size.size);
+    const sizesList = avalibleSize.map((size) => <SizeItem key={size} size={size} />);
 
-    if (product?.error) {
-        return (
-            <section className='catalog-item'>
-                <ErrorMessage errorText={product.error}/>
-            </section>            
-        )
-    }
+
 
   return (
     <section className='catalog-item'>

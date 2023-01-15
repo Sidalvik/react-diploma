@@ -1,38 +1,8 @@
 import PropTypes from 'prop-types';
 import {FETCH_PRODUCT_REQUEST, FETCH_PRODUCT_SUCCESS, FETCH_PRODUCT_FILED, RESET_ERROR_PRODUCT, CHANGE_PRODUCT_ACTIVE_SIZE, RESET_ACTIVE_SIZE_PRODUCT, CHANGE_PRODUCT_COUNT} from '../actions/actionTypes';
 
-const i =
-    {
-        "id": 20,
-        "category": 13,
-        "title": "Кроссовки как у Pharrell Williams",
-        "images": [
-          "https://raw.githubusercontent.com/netology-code/ra16-diploma/master/html/img/products/pharrell_williams_sneakers.jpg",
-          "https://raw.githubusercontent.com/netology-code/ra16-diploma/master/html/img/products/pharrell_williams_sneakers_2.jpg"
-        ],
-        "sku": "1000000",
-        "manufacturer": "Chanel",
-        "color": "Черный",
-        "material": "Ткань",
-        "reason": "Прогулка",
-        "season": "Лето",
-        "heelSize": "3 см.",
-        "price": 12000,
-        "oldPrice": 14000,
-        "sizes": [
-            {
-                "size": "10 US",
-                "avalible": true
-            },
-            {
-                "size": "15 US",
-                "avalible": false
-            }
-        ]
-    };
-
 const initialState = {
-    item: {...i},
+    item: {},
     activeSize: null,
     count: 1,
     loading: false,
@@ -72,7 +42,13 @@ productReducer.propTypes = {
     state: PropTypes.shape({
         item: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
-        error: PropTypes.oneOf([null, PropTypes.string]).isRequired,
+        error: PropTypes.oneOf([
+            null,
+            PropTypes.shape({
+                status: PropTypes.number,
+                message: PropTypes.string.isRequired,
+            }),
+        ]).isRequired,
         activeSize: PropTypes.oneOf([null, PropTypes.string]).isRequired,
         count: PropTypes.number.isRequired
     }).isRequired,

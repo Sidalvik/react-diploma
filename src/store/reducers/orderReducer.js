@@ -39,7 +39,13 @@ orderReduser.propTypes = {
         address: PropTypes.string.isRequired,
         agree: PropTypes.number.isRequired,
         loading: PropTypes.bool.isRequired,
-        error: PropTypes.oneOf([null, PropTypes.objectOf(Error)]).isRequired,
+        error: PropTypes.oneOf([
+            null,
+            PropTypes.shape({
+                status: PropTypes.number,
+                message: PropTypes.string.isRequired,
+            }),
+        ]).isRequired,
         successOrder: PropTypes.bool.isRequired,
     }).isRequired,
     action: PropTypes.shape({

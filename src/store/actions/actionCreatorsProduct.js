@@ -33,7 +33,7 @@ export function changeProductCount(step) {
 export async function fetchProduct(dispatch, id) {
     const showErrorMesage = (errorMessage) =>{
         dispatch(fetchProductFiled(errorMessage));
-        // setTimeout(() => dispatch(resetErrorProduct()), 10 * 1000);
+        // setTimeout(() => dispatch(resetErrorProduct()), (+process.env.REACT_APP_ERROR_RESET_TIMEOUT || 10) * 1000);
     }
 
     const abort = new AbortController();
@@ -48,15 +48,13 @@ export async function fetchProduct(dispatch, id) {
           const list = await responce.json();
           dispatch(fetchProductSuccess(list));
         } catch (error) {
-            showErrorMesage(error.message);
+            showErrorMesage({message: error.message});
         }
       } else {
-        console.log(responce)
-        console.log(`Error ${responce.status}: ${responce.statusText}`)
-        showErrorMesage(`Error ${responce.status}: ${responce.statusText}`);
+        showErrorMesage({status: responce.status, message: `Error ${responce.status}: ${responce.statusText}`});
       }
     } catch (error) {
-        showErrorMesage(error.message);
+        showErrorMesage({message: error.message});
     }
 }
 
@@ -71,7 +69,10 @@ fetchProductSuccess.propTypes = {
 }
 
 fetchProductFiled.propTypes = {
-    error: PropTypes.string.isRequired,
+    error: PropTypes.shape({
+        status: PropTypes.number,
+        message: PropTypes.string.isRequired,
+    }).isRequired,
 }
 
 resetErrorProduct.propTypes = {

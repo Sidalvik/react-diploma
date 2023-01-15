@@ -1,9 +1,6 @@
 import PropTypes from 'prop-types';
-import {CHANGE_ACTIVE_CATEGORIES, RESET_CATEGORIES, FETCH_CATEGORIES_REQUEST, FETCH_CATEGORIES_SUCCESS, FETCH_CATEGORIES_FILED, RESET_ERROR_CATEGORIES} from '../actions/actionTypes';
+import {RESET_CATEGORIES, FETCH_CATEGORIES_REQUEST, FETCH_CATEGORIES_SUCCESS, FETCH_CATEGORIES_FILED, RESET_ERROR_CATEGORIES} from '../actions/actionTypes';
 
-export function changeActiveCategories(id) {
-    return {type: CHANGE_ACTIVE_CATEGORIES, payload: {id}};
-}
 
 export function resetCategories(...arg) {
     return {type: RESET_CATEGORIES, payload: {}};
@@ -29,7 +26,7 @@ export function resetErrorCategories(...arg) {
 export async function fetchCategories(dispatch) {
     const showErrorMesage = (errorMessage) =>{
         dispatch(fetchCategoriesFiled(errorMessage));
-        setTimeout(() => dispatch(resetErrorCategories()), 10 * 1000);
+        setTimeout(() => dispatch(resetErrorCategories()),  (+process.env.REACT_APP_ERROR_RESET_TIMEOUT || 10) * 1000);
     }
 
     const abort = new AbortController();
@@ -56,9 +53,9 @@ export async function fetchCategories(dispatch) {
 
 
     //  PropTypes
-changeActiveCategories.propTypes = {
-    id: PropTypes.number.isRequired,
-}
+// changeActiveCategories.propTypes = {
+//     id: PropTypes.number.isRequired,
+// }
 
 resetCategories.propTypes = {
     arg: PropTypes.any,
@@ -73,7 +70,10 @@ fetchCategoriesSuccess.propTypes = {
 }
 
 fetchCategoriesFiled.propTypes = {
-    error: PropTypes.string.isRequired,
+    error: PropTypes.shape({
+        status: PropTypes.number,
+        message: PropTypes.string.isRequired,
+    }).isRequired,
 }
 
 resetErrorCategories.propTypes = {

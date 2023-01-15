@@ -8,17 +8,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchCategories } from '../../../../store/actions/actionCreatorsCategories';
 
 function Categories(props) {
-    const categories = useSelector((state) => state.categories);
     const dispatch = useDispatch();
-
+    
     useEffect((() => {
         fetchCategories(dispatch);
-    }), [dispatch])
+    }), [dispatch]);
 
-    const categoriesList = categories.list.map((item) => <CategoriesItem key={item.id} item={item}/>);
+    const categories = useSelector((state) => state.categories);
+    const categoriesList = categories.list.map((item) => <CategoriesItem key={item.id} item={item} />);
 
     if (categories.error) {
-        return <ErrorMessage errorText={categories.error}/>
+        return <ErrorMessage errorText={categories.error?.message}/>
     };
 
     if (categories.loading) {

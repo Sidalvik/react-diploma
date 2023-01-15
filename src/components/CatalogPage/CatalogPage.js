@@ -6,6 +6,7 @@ import CatalogSearchForm from './Catalog/CatalogSearchForm/CatalogSearchForm';
 import Categories from './Catalog/Categories/Categories';
 import Items from './Catalog/Items/Items';
 
+
 function CatalogPage(props) {
 
   return (
